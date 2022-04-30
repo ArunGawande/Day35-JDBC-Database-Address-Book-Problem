@@ -1,5 +1,6 @@
 package com.bridgelabz;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -7,14 +8,15 @@ public class AddressBookMain
 {
     static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
         boolean exit = false;
         while (!exit) {
             System.out.println(" Press\n 1 ->  Retrieve data\n 2 -> Update Address,city,state,zip  by srNo\n " +
                     "3 -> Retrieve data for particular date\n" +
-                    "4 -> Retrieve Count of Contacts for City or State\n" +
-                    "5 -> exit");
+                    " 4 -> Retrieve Count of Contacts for City or State\n" +
+                    " 5 -> Add new Contacts to AddressBook\n" +
+                    " 6 -> exit");
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
@@ -29,6 +31,9 @@ public class AddressBookMain
                 case 4:
                     retrieveCountByCityOrState();
                 case 5:
+                    addNewContact();
+                    break;
+                case 6:
                     exit = true;
             }
         }
@@ -49,10 +54,10 @@ public class AddressBookMain
         addressBook.updateCityByZip(scanner.next(), scanner.next(), scanner.next(), scanner.nextInt(), scanner.nextInt());
     }
     private static void retrieveDataForParticularDate() {
-        AddressBook addressBook = new AddressBook();
+        AddressBook addressBookRepo = new AddressBook();
         System.out.println("Enter the Date of Joining (YYYY-MM-DD");
         System.out.println("Enter year , month and Day ex: 2020 02 03");
-        List<Contacts> employeeInfoList = addressBook.findAllForParticularDate(LocalDate.of(scanner.nextInt(), scanner.nextInt(), scanner.nextInt()));
+        List<Contacts> employeeInfoList = addressBookRepo.findAllForParticularDate(LocalDate.of(scanner.nextInt(), scanner.nextInt(), scanner.nextInt()));
         for (Contacts employee : employeeInfoList
         ) {
             System.out.println(employee + "\n");
@@ -76,6 +81,32 @@ public class AddressBookMain
                 break;
         }
 
+
+    }
+    private static void addNewContact() throws SQLException {
+        Contacts add = new Contacts();
+        System.out.println("Enter First Name:");
+        add.setFirstName(scanner.next());
+        System.out.println("Enter Last name:");
+        add.setLastName(scanner.next());
+        System.out.println("Enter address");
+        add.setAddress(scanner.next());
+        System.out.println("Enter city");
+        add.setCity(scanner.next());
+        System.out.println("Enter state");
+        add.setState(scanner.next());
+        System.out.println("Enter Zip");
+        add.setZip(scanner.nextInt());
+        System.out.println("Enter PhoneNumber");
+        add.setPhoneNumber(scanner.next());
+        System.out.println("Enter Email");
+        add.setEmailId(scanner.next());
+        System.out.println("Enter Addressbook name");
+        add.setBookName(scanner.next());
+        System.out.println("Enter contact type");
+        add.setContactType(scanner.next());
+        add.setDateAdded(LocalDate.now());
+        AddressBook.insertData(add);
 
     }
 }
